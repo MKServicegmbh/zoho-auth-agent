@@ -8,11 +8,14 @@ client_id = os.environ.get("CLIENT_ID")
 client_secret = os.environ.get("CLIENT_SECRET")
 redirect_uri = os.environ.get("REDIRECT_URI")
 
+# Erforderlicher Scope für CRM-Nutzerinfos + Module + Zoho Books
+scope = "ZohoCRM.modules.ALL,ZohoCRM.users.READ,ZohoBooks.fullaccess.all"
+
 @app.route('/')
 def home():
     auth_url = (
         f"https://accounts.zoho.eu/oauth/v2/auth?"
-        f"scope=ZohoCRM.modules.ALL%20ZohoBooks.fullaccess.all&"
+        f"scope={scope}&"
         f"client_id={client_id}&"
         f"response_type=code&"
         f"access_type=offline&"
@@ -32,7 +35,8 @@ def callback():
         "code": code
     }
     response = requests.post(token_url, data=payload)
-    return f"<pre>{response.text}</pre>"
+    return f"<h3>Access Token Antwort:</h3><pre>{response.text}</pre>"
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=3000)
+
