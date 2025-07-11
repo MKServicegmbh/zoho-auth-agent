@@ -17,3 +17,4 @@ def callback():
     if not code:
         return "<h2>❌ Kein Code empfangen.</h2>"
     return f"<h2>✅ Authorization Code:</h2><pre>{code}</pre>"
+
