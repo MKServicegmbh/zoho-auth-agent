@@ -9,7 +9,7 @@ client_secret = os.environ.get("CLIENT_SECRET")
 redirect_uri = os.environ.get("REDIRECT_URI")
 
 # Erforderlicher Scope für CRM-Nutzerinfos + Module + Zoho Books
-scope = "ZohoCRM.modules.ALL,ZohoCRM.users.READ,ZohoBooks.fullaccess.all"
+scope = "ZohoCRM.modules.ALL ZohoCRM.users.READ ZohoCRM.settings.fields.ALL ZohoBooks.fullaccess.all"
 
 @app.route('/')
 def home():
