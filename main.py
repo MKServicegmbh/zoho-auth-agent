@@ -4,26 +4,30 @@ import requests
 
 app = Flask(__name__)
 
-# Deine Zoho-Zugangsdaten
-client_id = "1000.PZ8O3E1I0LJVW5GKZ7CO2VLCT20ABU"
-client_secret = "552fa43b9619dfc0f2315fbae5553881a935a57998"
-redirect_uri = "https://zoho-auth-agent.onrender.com/callback"
+client_id = os.environ.get("CLIENT_ID")
+client_secret = os.environ.get("CLIENT_SECRET")
+redirect_uri = os.environ.get("REDIRECT_URI")
 
 @app.route('/')
 def home():
-    auth_url = (
-        f"https://accounts.zoho.eu/oauth/v2/auth?"
-        f"scope=ZohoCRM.modules.ALL,ZohoBooks.fullaccess.all&"
-        f"client_id={client_id}&"
-        f"response_type=code&"
-        f"access_type=offline&"
-        f"redirect_uri={redirect_uri}"
+   auth_url = (
+    f"https://accounts.zoho.eu/oauth/v2/auth?"
+    f"scope=ZohoCRM.modules.ALL%20ZohoBooks.fullaccess.all&"
+    f"client_id={client_id}&"
+    f"response_type=code&"
+    f"access_type=offline&"
+    f"redirect_uri={redirect_uri}"
+)
+
     )
     return f'<a href="{auth_url}" target="_blank">Zoho Auth starten</a>'
 
 @app.route('/callback')
 def callback():
     code = request.args.get('code')
+    if not code:
+        return "Kein Code erhalten."
+
     token_url = "https://accounts.zoho.eu/oauth/v2/token"
     payload = {
         "grant_type": "authorization_code",
@@ -35,6 +39,5 @@ def callback():
     response = requests.post(token_url, data=payload)
     return f"<pre>{response.text}</pre>"
 
-# Für Render wichtig: Port 10000 vermeiden, Standard 0.0.0.0:10000 geht hier nicht
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=10000)
+    app.run(host='0.0.0.0', port=3000)
